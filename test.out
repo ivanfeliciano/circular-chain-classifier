@@ -1,0 +1,79 @@
+label red_ with shape (129, 25)
+label red with shape (129, 19)
+label green with shape (129, 20)
+label blue with shape (129, 21)
+label yellow with shape (129, 22)
+label white with shape (129, 23)
+label black with shape (129, 24)
+label orange with shape (129, 25)
+running...
+Accuracy score for classifier red = 0.7076923076923077
+Accuracy score for classifier green = 0.5076923076923077
+Accuracy score for classifier blue = 0.6307692307692307
+Accuracy score for classifier yellow = 0.6615384615384615
+Accuracy score for classifier white = 0.7230769230769231
+Accuracy score for classifier black = 0.6307692307692307
+Accuracy score for classifier orange = 0.5230769230769231
+Accuracy score for classifier red = 0.7076923076923077
+Accuracy score for classifier green = 0.5076923076923077
+Accuracy score for classifier blue = 0.6307692307692307
+Accuracy score for classifier yellow = 0.6615384615384615
+Accuracy score for classifier white = 0.7230769230769231
+Accuracy score for classifier black = 0.6307692307692307
+Accuracy score for classifier orange = 0.5230769230769231
+Accuracy score for classifier red = 0.7076923076923077
+Accuracy score for classifier green = 0.5076923076923077
+Accuracy score for classifier blue = 0.6307692307692307
+Accuracy score for classifier yellow = 0.6615384615384615
+Accuracy score for classifier white = 0.7230769230769231
+Accuracy score for classifier black = 0.6307692307692307
+Accuracy score for classifier orange = 0.5230769230769231
+Accuracy score for classifier red = 0.7076923076923077
+Accuracy score for classifier green = 0.5076923076923077
+Accuracy score for classifier blue = 0.6307692307692307
+Accuracy score for classifier yellow = 0.6615384615384615
+Accuracy score for classifier white = 0.7230769230769231
+Accuracy score for classifier black = 0.6307692307692307
+Accuracy score for classifier orange = 0.5230769230769231
+Accuracy score for classifier red = 0.7076923076923077
+Accuracy score for classifier green = 0.5076923076923077
+Accuracy score for classifier blue = 0.6307692307692307
+Accuracy score for classifier yellow = 0.6615384615384615
+Accuracy score for classifier white = 0.7230769230769231
+Accuracy score for classifier black = 0.6307692307692307
+Accuracy score for classifier orange = 0.5230769230769231
+Accuracy score for classifier red = 0.7076923076923077
+Accuracy score for classifier green = 0.5076923076923077
+Accuracy score for classifier blue = 0.6307692307692307
+Accuracy score for classifier yellow = 0.6615384615384615
+Accuracy score for classifier white = 0.7230769230769231
+Accuracy score for classifier black = 0.6307692307692307
+Accuracy score for classifier orange = 0.5230769230769231
+Accuracy score for classifier red = 0.7076923076923077
+Accuracy score for classifier green = 0.5076923076923077
+Accuracy score for classifier blue = 0.6307692307692307
+Accuracy score for classifier yellow = 0.6615384615384615
+Accuracy score for classifier white = 0.7230769230769231
+Accuracy score for classifier black = 0.6307692307692307
+Accuracy score for classifier orange = 0.5230769230769231
+Accuracy score for classifier red = 0.7076923076923077
+Accuracy score for classifier green = 0.5076923076923077
+Accuracy score for classifier blue = 0.6307692307692307
+Accuracy score for classifier yellow = 0.6615384615384615
+Accuracy score for classifier white = 0.7230769230769231
+Accuracy score for classifier black = 0.6307692307692307
+Accuracy score for classifier orange = 0.5230769230769231
+Accuracy score for classifier red = 0.7076923076923077
+Accuracy score for classifier green = 0.5076923076923077
+Accuracy score for classifier blue = 0.6307692307692307
+Accuracy score for classifier yellow = 0.6615384615384615
+Accuracy score for classifier white = 0.7230769230769231
+Accuracy score for classifier black = 0.6307692307692307
+Accuracy score for classifier orange = 0.5230769230769231
+Accuracy score for classifier red = 0.7076923076923077
+Accuracy score for classifier green = 0.5076923076923077
+Accuracy score for classifier blue = 0.6307692307692307
+Accuracy score for classifier yellow = 0.6615384615384615
+Accuracy score for classifier white = 0.7230769230769231
+Accuracy score for classifier black = 0.6307692307692307
+Accuracy score for classifier orange = 0.5230769230769231
