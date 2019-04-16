@@ -48,7 +48,7 @@ class CircularChainClassifier(object):
 		X = X.drop(labels_to_drop, axis=1)
 		return X
 
-	def run(self, X, steps=10):
+	def classify(self, X, steps=10):
 		print("running...")
 		X_hat = X.drop(self.labels, axis=1)
 		y_pred_df = None
@@ -72,9 +72,5 @@ class CircularChainClassifier(object):
 				y_pred_df = pd.DataFrame.from_dict(y_pred_dict)
 				X_hat = pd.concat([X_hat, y_pred_df], axis=1)
 			print("GAcc = {}".format(global_accuracy(X[self.labels], X_hat[self.labels])))
-	def classify(self):
-		pass
-	def evaluation(self):
-		pass
 if __name__ == '__main__':
 	main()

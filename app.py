@@ -24,17 +24,23 @@ le = LabelEncoder()
 train_df_flags = train_df_flags[train_df_flags.columns[:]].apply(le.fit_transform)
 test_df_flags = test_df_flags[test_df_flags.columns[:]].apply(le.fit_transform)
 
-ccc = CircularChainClassifier(MultinomialNB())
+CCC = CircularChainClassifier(MultinomialNB())
 BR = BinaryRelevance(MultinomialNB())
 CC = ChainClassifier(MultinomialNB())
 
+CCC.train(train_df_flags, labels)
+CCC.classify(test_df_flags)
+BR.train(train_df_flags, labels)
+BR.classify(test_df_flags)
+CC.train(train_df_flags, labels)
+CC.classify(test_df_flags)
 
-for permutation_labels in list(itertools.permutations(labels)):
-	print(permutation_labels)
-	ccc.train(train_df_flags, list(permutation_labels))
-	ccc.run(test_df_flags)
-	BR.train(train_df_flags, list(permutation_labels))
-	BR.classify(test_df_flags)
-	CC.train(train_df_flags, list(permutation_labels))
-	CC.classify(test_df_flags)
+# for permutation_labels in list(itertools.permutations(labels)):
+# 	print(permutation_labels)
+	# CCC.train(train_df_flags, list(permutation_labels))
+	# CCC.classify(test_df_flags)
+	# BR.train(train_df_flags, list(permutation_labels))
+	# BR.classify(test_df_flags)
+	# CC.train(train_df_flags, list(permutation_labels))
+	# CC.classify(test_df_flags)
 
