@@ -28,10 +28,13 @@ CCC = CircularChainClassifier(MultinomialNB())
 BR = BinaryRelevance(MultinomialNB())
 CC = ChainClassifier(MultinomialNB())
 
+print("CCC")
 CCC.train(train_df_flags, labels)
 CCC.classify(test_df_flags)
+print("BR")
 BR.train(train_df_flags, labels)
 BR.classify(test_df_flags)
+print("CC")
 CC.train(train_df_flags, labels)
 CC.classify(test_df_flags)
 

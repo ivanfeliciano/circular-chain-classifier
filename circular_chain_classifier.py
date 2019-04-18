@@ -4,73 +4,70 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import accuracy_score
 from sklearn.base import clone
+from sklearn.model_selection import KFold
 from evaluation_measures import global_accuracy
+from sklearn.utils import shuffle
+from evaluation_measures import *
 
 class CircularChainClassifier(object):
 	"""
-	Súper clase de clasificador en cadena circular, recibe
+	Clase de clasificador en cadena circular, recibe
 	como parámetros un dataframe de pandas que contiene al 
 	conjunto de datos y la lista de atributos que son las posibles
 	etiquetas de cada ejemplo.
 	"""
 	def __init__(self, classifier):
 		self.classifier = classifier
-		self.list_of_classifiers_first_iteration = None
-		self.list_of_classifiers_general_case = None
-	def train(self, X, labels):
-		self.list_of_classifiers_first_iteration = OrderedDict()
-		self.list_of_classifiers_general_case = OrderedDict()
-		for label in labels:
-			self.list_of_classifiers_first_iteration[label] = clone(self.classifier)
-			self.list_of_classifiers_general_case[label] = clone(self.classifier)
-		self.train_set_x = X
+		self.ccc_classifiers = None
+	def train(self, X, labels, number_of_iterations=3, k=5):
+		self.ccc_classifiers = OrderedDict()
 		self.labels = labels
+		training_set = X.copy()
+		k_folds = KFold(n_splits=k)
 		for label in self.labels:
-			self.train_one_link_first_iteration(label)
-			self.train_one_link_general_case(label)
-	def train_one_link_general_case(self, label):
-		X = self.train_set_x.drop(label, axis=1)
-		y = self.train_set_x[label]
-		# print("label general {} with shape {}".format(label, X.shape))
-		self.list_of_classifiers_general_case[label].fit(X, y)
+			self.ccc_classifiers[label] = clone(self.classifier)
+		for label in self.labels[1:]:
+			training_set[label] = 1
+		counter = 0
+		while counter < number_of_iterations:
+			counter += 1
+			for label in self.labels:
+				y_true = X[label]
+				training_set.sort_index(inplace=True)
+				training_set = training_set.drop(label, axis=1)
+				cv_scores = np.array([])
+				classifier_cv_outputs = np.array([])
+				training_set, y_true = shuffle(training_set, y_true)
+				# print(training_set.head())
+				# print(y_true.head())
+				for train_index, test_index in k_folds.split(training_set):
+					x_train, x_test = training_set.iloc[train_index,:], training_set.iloc[test_index,:]
+					y_train, y_test = y_true.iloc[train_index], y_true.iloc[test_index]
+					self.ccc_classifiers[label].partial_fit(x_train, y_train, classes=np.unique(y_train))
+					y_pred = self.ccc_classifiers[label].predict(x_test)
+					cv_scores = np.append(cv_scores, accuracy_score(y_test, y_pred))
+					classifier_cv_outputs = np.append(classifier_cv_outputs, y_pred)
+				# print(cv_scores)
+				training_set[label] = classifier_cv_outputs.astype(int)
+			print("Iteration {}".format(counter))
+			print("GAcc = {}".format(global_accuracy(X[self.labels], training_set[self.labels])))
+			print("MAcc = {}".format(mean_accuracy(X[self.labels], training_set[self.labels])))
+			print("MLAcc = {}".format(multilabel_accuracy(X[self.labels], training_set[self.labels])))
+			print("FMeasure = {}".format(f_measure(X[self.labels], training_set[self.labels])))
 
-	def train_one_link_first_iteration(self, label):
-		X = self.drop_not_depend_on_columns(self.train_set_x, label)
-		y = self.train_set_x[label]
-		# print("label first {} with shape {}".format(label, X.shape))
-		self.list_of_classifiers_first_iteration[label].fit(X, y)
+	def classify(self, X):
+		test_set = X.copy()
+		for label in self.labels[1:]:
+			test_set[label] = 1
+		for label in self.labels:
+			y_true = X[label]
+			test_set = test_set.drop(label, axis=1)
+			y_pred = self.ccc_classifiers[label].predict(test_set)
+			test_set[label] = y_pred.astype(int)
+		print("GAcc = {}".format(global_accuracy(X[self.labels], test_set[self.labels])))
+		print("MAcc = {}".format(mean_accuracy(X[self.labels], test_set[self.labels])))
+		print("MLAcc = {}".format(multilabel_accuracy(X[self.labels], test_set[self.labels])))
+		print("FMeasure = {}".format(f_measure(X[self.labels], test_set[self.labels])))
 
-	def drop_not_depend_on_columns(self, X, label):
-		label_index = self.labels.index(label)
-		if label_index + 1 == len(self.labels):
-			return X.drop(label, axis=1)
-		labels_to_drop = self.labels[label_index:]
-		X = X.drop(labels_to_drop, axis=1)
-		return X
-
-	def classify(self, X, steps=10):
-		print("running...")
-		X_hat = X.drop(self.labels, axis=1)
-		y_pred_df = None
-		i = 1
-		print("Iteration {}".format(i))
-		for classifier_f in self.list_of_classifiers_first_iteration:
-			y_pred = self.list_of_classifiers_first_iteration[classifier_f].predict(X_hat)
-			y_pred_dict = OrderedDict([(classifier_f, y_pred)])
-			y_pred_df = pd.DataFrame.from_dict(y_pred_dict)
-			X_hat = pd.concat([X_hat, y_pred_df], axis=1)
-			y = X[classifier_f]
-		print("GAcc = {}".format(global_accuracy(X[self.labels], X_hat[self.labels])))
-		while i < steps:
-			i += 1
-			print("Iteration {}".format(i))
-			for classifier_label in self.list_of_classifiers_general_case:
-				X_hat = X_hat.drop(classifier_label, axis=1)
-				y = X[classifier_label] 
-				y_pred = self.list_of_classifiers_general_case[classifier_label].predict(X_hat)
-				y_pred_dict = OrderedDict([(classifier_label, y_pred)])
-				y_pred_df = pd.DataFrame.from_dict(y_pred_dict)
-				X_hat = pd.concat([X_hat, y_pred_df], axis=1)
-			print("GAcc = {}".format(global_accuracy(X[self.labels], X_hat[self.labels])))
 if __name__ == '__main__':
 	main()

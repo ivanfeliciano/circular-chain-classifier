@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import accuracy_score
 from sklearn.base import clone
-from evaluation_measures import global_accuracy
+from evaluation_measures import *
 
 
 class ChainClassifier(object):
@@ -33,6 +33,9 @@ class ChainClassifier(object):
 			y_pred_df = pd.DataFrame.from_dict(y_pred_dict)
 			X_hat = pd.concat([X_hat, y_pred_df], axis=1)
 		print("GAcc = {}".format(global_accuracy(X[self.labels], X_hat[self.labels])))
+		print("MAcc = {}".format(mean_accuracy(X[self.labels], X_hat[self.labels])))
+		print("MLAcc = {}".format(multilabel_accuracy(X[self.labels], X_hat[self.labels])))
+		print("FMeasure = {}".format(f_measure(X[self.labels], X_hat[self.labels])))
 	def save(self):
 		pass
 	def load(self):
