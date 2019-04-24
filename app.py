@@ -3,13 +3,11 @@ import json
 import numpy as np
 from scipy.io import arff
 import pandas as pd
-from sklearn.metrics import accuracy_score
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.svm import LinearSVC
+from sklearn.naive_bayes import MultinomialNB, GaussianNB
 from sklearn.preprocessing import LabelEncoder
-from circular_chain_classifier import CircularChainClassifier
-from sklearn.neighbors import KNeighborsClassifier
-from binary_relevance import BinaryRelevance
+from sklearn.svm import LinearSVC
+from circular_chain_classifier_sucar import CircularChainClassifier
+from binary_relevance import BinaryRelevance	
 from chain_classifier import ChainClassifier
 import itertools
 
@@ -17,18 +15,19 @@ data_flag = arff.loadarff('./flags/flags-train.arff')
 train_df_flags = pd.DataFrame(data_flag[0])
 data_flag = arff.loadarff('./flags/flags-test.arff')
 test_df_flags = pd.DataFrame(data_flag[0])
-labels = ['red','green','blue','yellow','white','black','orange']
+labels = ['green', 'red','blue','yellow','white','black','orange']
 
 
 le = LabelEncoder()
 train_df_flags = train_df_flags[train_df_flags.columns[:]].apply(le.fit_transform)
 test_df_flags = test_df_flags[test_df_flags.columns[:]].apply(le.fit_transform)
 
-CCC = CircularChainClassifier(MultinomialNB())
-BR = BinaryRelevance(MultinomialNB())
-CC = ChainClassifier(MultinomialNB())
+CCC = CircularChainClassifier(LinearSVC(max_iter=5000))
+BR = BinaryRelevance(LinearSVC(max_iter=5000))
+CC = ChainClassifier(LinearSVC(max_iter=5000))
 
 print("CCC")
+# CCC.train(train_df_flags, labels, number_of_iterations=5, k=5)
 CCC.train(train_df_flags, labels)
 CCC.classify(test_df_flags)
 print("BR")

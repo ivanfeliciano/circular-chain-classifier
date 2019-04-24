@@ -77,8 +77,7 @@ def proportional_k_interval_discretization(df):
                 pred = df.at[index, attribute]
                 df.at[index, attribute] = current_interval
                 if local_index == n_sqrt - 1 and different(pred,df.at[index,attribute]) and current_interval < n_sqrt-1:
-                    current_interval += 1
-                    
+                    current_interval += 1           
                 if not (local_index == n_sqrt-1 and not different(pred,df.at[index,attribute])):
                     local_index += 1                   
     return df

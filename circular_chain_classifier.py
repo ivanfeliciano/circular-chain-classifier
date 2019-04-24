@@ -69,5 +69,8 @@ class CircularChainClassifier(object):
 		print("MLAcc = {}".format(multilabel_accuracy(X[self.labels], test_set[self.labels])))
 		print("FMeasure = {}".format(f_measure(X[self.labels], test_set[self.labels])))
 
+def main():
+	pass
+
 if __name__ == '__main__':
 	main()
