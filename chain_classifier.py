@@ -16,6 +16,7 @@ class ChainClassifier(MultilabelClassifier):
 		self.labels = labels
 		k_folds = StratifiedKFold(n_splits=k)
 		training_set = X.drop(self.labels, axis=1)
+		outputs_for_eval = X.copy()
 		for label in self.labels:
 			self.classifiers[label] = clone(self.classifier)
 		# self.train_set = X
@@ -27,14 +28,15 @@ class ChainClassifier(MultilabelClassifier):
 			# training_set = training_set.drop(label, axis=1)
 			y_true = X[label]
 			k_folds = StratifiedKFold(n_splits=k)
-			classifier_cv_outputs = np.array([])
+			# classifier_cv_outputs = np.array([])
 			for train_index, test_index in k_folds.split(training_set, y_true):
 				x_train, x_test = training_set.iloc[train_index, :], training_set.iloc[test_index, :]
 				y_train, y_test = y_true.iloc[train_index], y_true.iloc[test_index]
 				self.classifiers[label].partial_fit(x_train, y_train, classes=np.unique(y_train))
 				y_pred = self.classifiers[label].predict(x_test)
-				classifier_cv_outputs = np.append(classifier_cv_outputs, y_pred)
-			training_set[label] = classifier_cv_outputs.astype(int)
+				# classifier_cv_outputs = np.append(classifier_cv_outputs, y_pred)
+				outputs_for_eval.loc[test_index, label] = y_pred
+			training_set[label] = outputs_for_eval[label]
 		self.update_eval_measures(X, training_set)
 		self.print_mean_and_std_measures()
 	def classify(self, X):

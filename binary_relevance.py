@@ -19,20 +19,22 @@ class BinaryRelevance(MultilabelClassifier):
 		for label in self.labels:
 			self.classifiers[label] = clone(self.classifier)
 		training_set = X.drop(labels, axis=1)
+		outputs_for_eval = X.copy()
 		predictions = X.copy()
 		for label in self.labels:
 			y_true = X[label]
 			# scores = cross_val_score(self.classifiers[label], dataset_only_attr, y, cv=5)
 			# print(scores)
-			classifier_cv_outputs = np.array([])
+			# classifier_cv_outputs = np.array([])
 			k_folds = StratifiedKFold(n_splits=k)
 			for train_index, test_index in k_folds.split(training_set, y_true):
 				x_train, x_test = training_set.iloc[train_index, :], training_set.iloc[test_index, :]
 				y_train, y_test = y_true.iloc[train_index], y_true.iloc[test_index]
 				self.classifiers[label].partial_fit(x_train, y_train, classes=np.unique(y_train))
 				y_pred = self.classifiers[label].predict(x_test)
-				classifier_cv_outputs = np.append(classifier_cv_outputs, y_pred)
-			predictions[label] = classifier_cv_outputs.astype(int)
+				# classifier_cv_outputs = np.append(classifier_cv_outputs, y_pred)
+				predictions.loc[test_index, label] = y_pred
+			# predictions[label] = outputs_for_eval[label]
 		self.update_eval_measures(X, predictions)
 		self.print_mean_and_std_measures()
 	def classify(self, X):

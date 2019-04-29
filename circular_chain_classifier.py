@@ -21,6 +21,7 @@ class CircularChainClassifier(MultilabelClassifier):
 		self.labels = labels
 		self.k = k
 		training_set = X.copy()
+		outputs_for_eval = X.copy()
 		for label in self.labels:
 			self.classifiers[label] = clone(self.classifier)
 
@@ -35,7 +36,7 @@ class CircularChainClassifier(MultilabelClassifier):
 				# training_set.sort_index(inplace=True)
 				training_set = training_set.drop(label, axis=1)
 				# cv_scores = np.array([])
-				classifier_cv_outputs = np.array([])
+				# classifier_cv_outputs = np.array([])
 				# training_set, y_true = shuffle(training_set, y_true)
 				# print(training_set.head())
 				# print(y_true.head())
@@ -49,11 +50,14 @@ class CircularChainClassifier(MultilabelClassifier):
 					self.classifiers[label].partial_fit(x_train, y_train, classes=np.unique(y_train))
 					y_pred = self.classifiers[label].predict(x_test)
 					# cv_scores = np.append(cv_scores, accuracy_score(y_test, y_pred))
-					classifier_cv_outputs = np.append(classifier_cv_outputs, y_pred)
+					# classifier_cv_outputs = np.append(classifier_cv_outputs, y_pred)
+					outputs_for_eval.loc[test_index, label] = y_pred
 				# print(cv_scores)
-				training_set[label] = classifier_cv_outputs.astype(int)
+				# training_set[label] = classifier_cv_outputs.astype(int)
+				training_set[label] = outputs_for_eval[label]
 			# print("Iteration {}".format(counter))
-			self.update_eval_measures(X, training_set)
+			self.update_eval_measures(X, outputs_for_eval)
+			# self.print_mean_and_std_measures()
 		self.print_mean_and_std_measures()
 
 	def classify(self, X):

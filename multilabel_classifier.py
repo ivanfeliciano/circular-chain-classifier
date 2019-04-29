@@ -17,15 +17,24 @@ class MultilabelClassifier(object):
 		self.f_measure = np.array([])
 		self.labels = None
 		self.k = 10
+		self.table_measures = '<div style="overflow-x:auto;"> <table> <tr> <th>GAccMean</th><th>GAcc_std</th><th>MAccMean</th><th>MAcc_std</th><th>MLAccMean</th><th>MLAcc_std</th><th>F-measureMean</th><th>F-measure_std</th> </tr>'
 	def print_mean_and_std_measures(self):
 		# print(self.gacc)
 		# print(self.macc)
 		# print(self.mlacc)
 		# print(self.f_measure)
-		print("GAcc: mean = {}, std = {}".format(np.mean(self.gacc), np.std(self.gacc)))
-		print("MAcc: mean = {}, std = {}".format(np.mean(self.macc), np.std(self.macc)))
-		print("MLAcc: mean = {}, std = {}".format(np.mean(self.mlacc), np.std(self.mlacc)))
-		print("FMeasure: mean = {}, std = {}".format(np.mean(self.f_measure), np.std(self.f_measure)))
+		# gacc_mean, gacc_std = np.mean(self.gacc), np.std(self.gacc)
+		# print("GAcc: mean = {}, std = {}".format(np.mean(self.gacc), np.std(self.gacc)))
+		# macc_mean, macc_std = np.mean(self.macc), np.std(self.macc)
+		# print("MAcc: mean = {}, std = {}".format(np.mean(self.macc), np.std(self.macc)))
+		# mlacc_mean, mlacc_std = np.mean(self.mlacc), np.std(self.mlacc)
+		# print("MLAcc: mean = {}, std = {}".format(np.mean(self.mlacc), np.std(self.mlacc)))
+		# f_measure_mean, f_measure_std = np.mean(self.f_measure), np.std(self.f_measure)
+		# print("FMeasure: mean = {}, std = {}".format(np.mean(self.f_measure), np.std(self.f_measure)))
+
+		self.table_measures += '</table></div>'
+		print(self.table_measures)
+
 	def update_eval_measures(self, true, predictions, print_current_vals=False):
 		true_outputs_chunks = []
 		predictions_chunks = []
@@ -38,8 +47,15 @@ class MultilabelClassifier(object):
 			self.macc = np.append(self.macc, mean_accuracy(t[self.labels], p[self.labels]))
 			self.mlacc = np.append(self.mlacc, multilabel_accuracy(t[self.labels], p[self.labels]))
 			self.f_measure = np.append(self.f_measure, f_measure(t[self.labels], p[self.labels]))
-			if print_current_vals:
-				print("GAcc = {}".format(self.gacc[-1]))
-				print("MAcc = {}".format(self.macc[-1]))
-				print("MLAcc = {}".format(self.mlacc[-1]))
-				print("FMeasure = {}".format(self.f_measure[-1]))
+		gacc_mean, gacc_std = np.mean(self.gacc), np.std(self.gacc)
+		macc_mean, macc_std = np.mean(self.macc), np.std(self.macc)
+		mlacc_mean, mlacc_std = np.mean(self.mlacc), np.std(self.mlacc)
+		f_measure_mean, f_measure_std = np.mean(self.f_measure), np.std(self.f_measure)
+		i = [gacc_mean, gacc_std, macc_mean, macc_std, mlacc_mean, mlacc_std, f_measure_mean, f_measure_std]
+		self.table_measures += '<tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7])
+		# if print_current_vals:
+
+			# print("GAcc = {}".format(self.gacc[-1]))
+			# print("MAcc = {}".format(self.macc[-1]))
+			# print("MLAcc = {}".format(self.mlacc[-1]))
+			# print("FMeasure = {}".format(self.f_measure[-1]))
