@@ -8,6 +8,8 @@ from sklearn.model_selection import KFold, StratifiedKFold
 from sklearn.utils import shuffle
 from evaluation_measures import *
 from multilabel_classifier import MultilabelClassifier
+from scipy.sparse import hstack, csr, issparse
+
 
 class CircularChainClassifier(MultilabelClassifier):
 	"""
@@ -16,14 +18,18 @@ class CircularChainClassifier(MultilabelClassifier):
 	conjunto de datos y la lista de atributos que son las posibles
 	etiquetas de cada ejemplo.
 	"""
-	def train(self, X, labels, number_of_iterations=3, k=10):
+	def train(self, X, labels, number_of_iterations=3, k=10, labels_df=None):
 		self.classifiers = OrderedDict()
 		self.labels = labels
 		self.k = k
-		training_set = X.copy()
-		outputs_for_eval = X.copy()
 		for label in self.labels:
 			self.classifiers[label] = clone(self.classifier)
+		if issparse(X):
+			self.train_text(X, number_of_iterations, labels_df)
+			return 0
+
+		training_set = X.copy()
+		outputs_for_eval = X.copy()
 
 		for label in self.labels[1:]:
 			training_set[label] = 1
@@ -59,6 +65,14 @@ class CircularChainClassifier(MultilabelClassifier):
 			self.update_eval_measures(X, outputs_for_eval)
 			# self.print_mean_and_std_measures()
 		self.print_mean_and_std_measures()
+	def train_text(self, X, number_of_iterations, labels_df):
+		training_set = X.copy()
+		predictions = labels_df.copy()
+
+		for label in labels_df:
+			ones = np.ones_like(labels_df[label])
+			training_set = hstack((training_set, np.array(ones)[:, None]))
+			print(training_set.shape)
 
 	def classify(self, X):
 		test_set = X.copy()

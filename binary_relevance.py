@@ -21,10 +21,15 @@ class BinaryRelevance(MultilabelClassifier):
 		training_set = X.drop(labels, axis=1)
 		outputs_for_eval = X.copy()
 		predictions = X.copy()
+		# idx = 0
 		for label in self.labels:
 			y_true = X[label]
-			# scores = cross_val_score(self.classifiers[label], dataset_only_attr, y, cv=5)
+			# scores = cross_val_score(self.classifiers[label], training_set, y_true, cv=self.k)
 			# print(scores)
+			# idx += 1
+			# print("{},{},{}<br>".format(idx, label, scores.mean()))
+
+			# print("<h4>std = {}</h4>".format(scores.std() * 2))
 			# classifier_cv_outputs = np.array([])
 			k_folds = StratifiedKFold(n_splits=k)
 			for train_index, test_index in k_folds.split(training_set, y_true):
