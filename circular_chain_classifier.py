@@ -34,7 +34,6 @@ class CircularChainClassifier(MultilabelClassifier):
 		for label in self.labels[1:]:
 			training_set[label] = 1
 		counter = 0
-		
 		while counter < number_of_iterations:
 			counter += 1
 			for label in self.labels:
@@ -53,7 +52,7 @@ class CircularChainClassifier(MultilabelClassifier):
 					y_train, y_test = y_true.iloc[train_index], y_true.iloc[test_index]
 					# print(y_train.value_counts())
 					# print(y_test.value_counts())
-					self.classifiers[label].partial_fit(x_train, y_train, classes=np.unique(y_train))
+					self.classifiers[label].partial_fit(x_train, y_train, classes=[0,1])
 					y_pred = self.classifiers[label].predict(x_test)
 					# cv_scores = np.append(cv_scores, accuracy_score(y_test, y_pred))
 					# classifier_cv_outputs = np.append(classifier_cv_outputs, y_pred)
@@ -64,7 +63,8 @@ class CircularChainClassifier(MultilabelClassifier):
 			# print("Iteration {}".format(counter))
 			self.update_eval_measures(X, outputs_for_eval)
 			# self.print_mean_and_std_measures()
-		self.print_mean_and_std_measures()
+		# self.print_mean_and_std_measures()
+
 	def train_text(self, X, number_of_iterations, labels_df):
 		training_set = X.copy()
 		predictions = labels_df.copy()

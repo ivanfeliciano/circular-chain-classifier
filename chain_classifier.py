@@ -32,7 +32,7 @@ class ChainClassifier(MultilabelClassifier):
 			for train_index, test_index in k_folds.split(training_set, y_true):
 				x_train, x_test = training_set.iloc[train_index, :], training_set.iloc[test_index, :]
 				y_train, y_test = y_true.iloc[train_index], y_true.iloc[test_index]
-				self.classifiers[label].partial_fit(x_train, y_train, classes=np.unique(y_train))
+				self.classifiers[label].partial_fit(x_train, y_train, classes=[0,1])
 				y_pred = self.classifiers[label].predict(x_test)
 				# classifier_cv_outputs = np.append(classifier_cv_outputs, y_pred)
 				outputs_for_eval.loc[test_index, label] = y_pred

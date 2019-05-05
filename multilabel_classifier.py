@@ -18,6 +18,7 @@ class MultilabelClassifier(object):
 		self.labels = None
 		self.k = 10
 		self.table_measures = '<div style="overflow-x:auto;"> <table> <tr> <th>GAccMean</th><th>GAcc_std</th><th>MAccMean</th><th>MAcc_std</th><th>MLAccMean</th><th>MLAcc_std</th><th>F-measureMean</th><th>F-measure_std</th> </tr>'
+		self.last_results = None
 	def print_mean_and_std_measures(self):
 		# print(self.gacc)
 		# print(self.macc)
@@ -51,8 +52,9 @@ class MultilabelClassifier(object):
 		macc_mean, macc_std = np.mean(self.macc), np.std(self.macc)
 		mlacc_mean, mlacc_std = np.mean(self.mlacc), np.std(self.mlacc)
 		f_measure_mean, f_measure_std = np.mean(self.f_measure), np.std(self.f_measure)
-		i = [gacc_mean, gacc_std, macc_mean, macc_std, mlacc_mean, mlacc_std, f_measure_mean, f_measure_std]
-		self.table_measures += '<tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7])
+		n_digits = 4
+		self.last_results = [round(gacc_mean, n_digits), round(gacc_std, n_digits), round(macc_mean, n_digits), round(macc_std, n_digits), round(mlacc_mean, n_digits), round(mlacc_std, 4), round(f_measure_mean, 4), round(f_measure_std, 4)]
+		self.table_measures += '<tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(self.last_results[0], self.last_results[1], self.last_results[2], self.last_results[3], self.last_results[4], self.last_results[5], self.last_results[6], self.last_results[7])
 		# if print_current_vals:
 
 			# print("GAcc = {}".format(self.gacc[-1]))
